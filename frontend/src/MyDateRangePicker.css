@@ -1,0 +1,28 @@
+.date-disabled {
+  text-decoration: line-through;
+  text-decoration-color: grey;
+  /*color: grey;*/
+}
+
+.date-for-check-out{
+  color: grey !important;
+}
+
+.rdrDayPassive {
+  visibility: hidden;
+}
+
+.rdrDayDisabled {
+  background-color: transparent;
+}
+
+.rdrDayNumber span {
+  font-weight: bold; /* Сделать текст жирным */
+}
+
+.rdrWeekDay {
+  font-weight: bold; /* Сделать текст жирным */
+}
+
+
+
