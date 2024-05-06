@@ -67,7 +67,7 @@ function MyDateRangePicker() {
             const startDate = format(range[0].startDate, 'yyyy-MM-dd');
             const endDate = format(range[0].endDate, 'yyyy-MM-dd');
 
-            axios.get(`http://127.0.0.1:5000/average-nightly-rate?start_date=${startDate}&end_date=${endDate}`)
+            axios.get(`http://backend/average-nightly-rate?start_date=${startDate}&end_date=${endDate}`)
                 .then(response => {
                     const ap = currencySymbols.formatPrice(response.data.average_price/100, response.data.currency)
                     const arp = currencySymbols.formatPrice(response.data.average_price/100*response.data.currency_rate, 'RUB')
@@ -111,7 +111,7 @@ function MyDateRangePicker() {
 
     useEffect(() => {
 
-            axios.get('http://127.0.0.1:5000/get-calendar')
+            axios.get('http://backend/get-calendar')
                 .then(response => {
                     // Преобразование дат в формат, требуемый DateRangePicker
                     const formattedDates = response.data.reserved_dates.map(date => ({
