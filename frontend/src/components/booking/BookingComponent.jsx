@@ -1,6 +1,6 @@
 import React from 'react';
 
-import { useNavigate } from 'react-router-dom';
+import {useNavigate} from 'react-router-dom';
 import './BookingComponent.css'
 
 import FixedHeader from "../FixedHeader";
@@ -18,28 +18,40 @@ function BookingComponent() {
         navigate('/')//
     };
 
-  return (
-      <div className="App" style={{width: '100%'}}>
-          <FixedHeader headerCaption={headerCaption} showHomeLink={true}/>
-          <div style={{ paddingTop: '60px' , width: '352px'}}>
-              <TripInfoComponent/>
-          </div>
-          <div>
-              <DetailingComponent/>
-          </div>
-          <div>
-              <RulesComponent/>
-          </div>
-          <div>
-              <button onClick={goBack}
-                      className={'enabledButton'}>
-                  <span style={{fontWeight: "bold", fontSize: 18, color: "white"}}>Вернуться</span>
-              </button>
-          </div>
+    return (
+        <div className="App" style={{width: '100%'}}>
+            <FixedHeader headerCaption={headerCaption} showHomeLink={true}/>
+            <div style={{paddingTop: '60px', width: '352px'}}>
+                <TripInfoComponent/>
+            </div>
+            <div>
+                <DetailingComponent currency="THB"
+                                    averagePricePerNight={1000}
+                                    nights={10}
+                                    discountName="Скидка за неделю"
+                                    discountAmount={1000}
+                                    cleaningFee={800}
+                                    tax={300}
+                                    />
+            </div>
+            <div>
+                <RulesComponent/>
+            </div>
+            <div>
+                <button onClick={goBack}
+                        className={'enabledButton'}>
+                    <span style={{fontWeight: "bold", fontSize: 18, color: "white"}}>Оплатить и бронировать</span>
+                </button>
+            </div>
 
-      </div>
+        </div>
 
-  );
+    );
 }
+
+// discountName,
+//                                 discountAmount,
+//                                 cleaningFee,
+//                                 tax
 
 export default BookingComponent;
