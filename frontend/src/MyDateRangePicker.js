@@ -7,9 +7,11 @@ import currencySymbols from "./CurrencySymbols";
 import './MyDateRangePicker.css'
 
 import {useCalendar} from './CalendarContext';
+import {addDays} from "date-fns/addDays";
 
 function MyDateRangePicker() {
     const [dates, setDates] = useState([]);  // Объявление состояния `dates` и функции `setDates`
+    const [maxStay, setMaxStay] = useState(1);
 
     const [state, setState] = useState({
         startDate: new Date(),
@@ -31,11 +33,7 @@ function MyDateRangePicker() {
     const [averagePrice, setAveragePrice] = useState("")
     const [averagePriceLabel, setAveragePriceLabel] = useState("")
     const [averageRubPrice, setAveragerRubPrice] = useState("")
-
-    // Фиктивные данные, представьте, что это ответ API
-    const averageRate = 120; // Средняя цена в валюте
-    const currency = "USD";
-    const exchangeRate = 75; // Курс валюты
+    const [buttonEnabled, setButtonEnabled] = useState(false);
 
 
     // Функция для обновления заголовка и диапазона дат
@@ -45,6 +43,10 @@ function MyDateRangePicker() {
         if (selection.startDate && selection.endDate) {
             const start = new Date(selection.startDate);
             const end = new Date(selection.endDate);
+            // Активируем кнопку, если выбраны обе даты
+            console.log(start, end)
+            setButtonEnabled(start && end && end > start);
+
             const nights = Math.round((end - start) / (1000 * 3600 * 24)); // todo тут какой-то баг с датами, который я закрыл округлением
             setNightsCounter(getNightsText(nights)); //
             setChooseLabel("");
@@ -68,8 +70,8 @@ function MyDateRangePicker() {
             console.log(process.env.REACT_APP_API_URL)
             axios.get(`${apiUrl}/average-nightly-rate?start_date=${startDate}&end_date=${endDate}`)
                 .then(response => {
-                    const ap = currencySymbols.formatPrice(response.data.average_price/100, response.data.currency)
-                    const arp = currencySymbols.formatPrice(response.data.average_price/100*response.data.currency_rate, 'RUB')
+                    const ap = currencySymbols.formatPrice(response.data.average_price / 100, response.data.currency)
+                    const arp = currencySymbols.formatPrice(response.data.average_price / 100 * response.data.currency_rate, 'RUB')
                     setAveragePrice(ap);
                     setAveragePriceLabel(' ночь')
                     setAveragerRubPrice(`${arp} по курсу ЦБ РФ`);
@@ -112,13 +114,14 @@ function MyDateRangePicker() {
 
             const apiUrl = process.env.REACT_APP_API_URL
             console.log(apiUrl)
-            axios.get(apiUrl+'/get-calendar')
+            axios.get(apiUrl + '/get-calendar')
                 .then(response => {
                     // Преобразование дат в формат, требуемый DateRangePicker
                     const formattedDates = response.data.reserved_dates.map(date => ({
                         ...date,
                         date: new Date(date.date)
                     }));
+                    setMaxStay(response.data.max_stay)
                     setDates(formattedDates);
                     formattedDates.forEach((dd) => {
                         switch (dd.status) {
@@ -141,6 +144,11 @@ function MyDateRangePicker() {
 
 
     const disabledDates = dates.filter(date => date.status === 'past' || date.status === 'reserved').map(date => new Date(date.date));
+
+    const calculate = () => {
+        console.log('Расчет для периода:', range[0].startDate, 'по', range[0].endDate);
+        // Здесь может быть логика для обработки выбранного периода
+    };
 
 
     // Функция для форматирования даты
@@ -183,6 +191,12 @@ function MyDateRangePicker() {
                 rangeColors={['#1d2429']}
                 color='#1d2429'
             />
+            <div>
+                <button onClick={calculate} disabled={!buttonEnabled}
+                        className={buttonEnabled ? 'enabledButton': 'disabledButton'}>
+                    <span style={{fontWeight:"bold", fontSize:18, color:"white"}}>Рассчитать</span>
+                </button>
+            </div>
         </div>
     );
 }

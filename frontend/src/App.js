@@ -9,7 +9,7 @@ function App() {
   return (
       <div className="App" style={{width: '100%'}}>
           <div>
-              <h1 style={{textAlign: 'center'}}>Уютная квартира@Сурин</h1>
+              {/*<h1 style={{textAlign: 'center'}}>Уютная квартира@Сурин</h1>*/}
           </div>
           <div style={{margin: '0 auto'}}>
               <CalendarProvider>
