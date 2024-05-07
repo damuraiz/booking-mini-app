@@ -7,7 +7,6 @@ import currencySymbols from "./CurrencySymbols";
 import './MyDateRangePicker.css'
 
 import {useCalendar} from './CalendarContext';
-import {setSelectionRange} from "@testing-library/user-event/dist/utils";
 
 function MyDateRangePicker() {
     const [dates, setDates] = useState([]);  // Объявление состояния `dates` и функции `setDates`
@@ -43,11 +42,10 @@ function MyDateRangePicker() {
     const handleSelect = (ranges) => {
         const {selection} = ranges;
         setRange([selection]);
-
         if (selection.startDate && selection.endDate) {
             const start = new Date(selection.startDate);
             const end = new Date(selection.endDate);
-            const nights = (end - start) / (1000 * 3600 * 24); // Расчёт количества ночей
+            const nights = Math.round((end - start) / (1000 * 3600 * 24)); // todo тут какой-то баг с датами, который я закрыл округлением
             setNightsCounter(getNightsText(nights)); //
             setChooseLabel("");
 
