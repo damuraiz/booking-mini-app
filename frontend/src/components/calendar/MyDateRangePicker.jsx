@@ -3,10 +3,12 @@ import {DateRange} from 'react-date-range';
 import {ru} from 'date-fns/locale';
 import format from 'date-fns/format';
 import axios from "axios";
-import currencySymbols from "./CurrencySymbols";
+import currencySymbols from "../../utils/CurrencySymbols";
 import './MyDateRangePicker.css'
+import { useNavigate } from 'react-router-dom';
 
-import {useCalendar} from './CalendarContext';
+
+import {useCalendar} from '../../utils/CalendarContext';
 import {addDays} from "date-fns/addDays";
 
 function MyDateRangePicker() {
@@ -27,7 +29,7 @@ function MyDateRangePicker() {
         }
     ]);
 
-    const [chooseLabel, setChooseLabel] = useState("Выберите диапазон");
+    const [chooseLabel, setChooseLabel] = useState("");
     const [nightsCounter, setNightsCounter] = useState("");
     const [period, setPeriod] = useState("");
     const [averagePrice, setAveragePrice] = useState("")
@@ -57,7 +59,7 @@ function MyDateRangePicker() {
             setPeriod(`${formattedStart} - ${formattedEnd}`);
 
         } else {
-            setNightsCounter("Выберите диапазон");
+            setNightsCounter("");
             setPeriod("");
         }
     };
@@ -145,9 +147,11 @@ function MyDateRangePicker() {
 
     const disabledDates = dates.filter(date => date.status === 'past' || date.status === 'reserved').map(date => new Date(date.date));
 
+    const navigate = useNavigate();
+
     const calculate = () => {
         console.log('Расчет для периода:', range[0].startDate, 'по', range[0].endDate);
-        // Здесь может быть логика для обработки выбранного периода
+        navigate('/booking')// Здесь может быть логика для обработки выбранного периода
     };
 
 
@@ -194,7 +198,7 @@ function MyDateRangePicker() {
             <div>
                 <button onClick={calculate} disabled={!buttonEnabled}
                         className={buttonEnabled ? 'enabledButton': 'disabledButton'}>
-                    <span style={{fontWeight:"bold", fontSize:18, color:"white"}}>Рассчитать</span>
+                    <span style={{fontWeight:"bold", fontSize:18, color:"white"}}>Бронировать</span>
                 </button>
             </div>
         </div>

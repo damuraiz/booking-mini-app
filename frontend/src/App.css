@@ -1,45 +1,93 @@
-@import "~react-date-range/dist/styles.css";      /* основные стили */
+@import "~react-date-range/dist/styles.css";
+/* основные стили */
 @import "~react-date-range/dist/theme/default.css"; /* тема по умолчанию */
 
 .App {
-  text-align: center;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
 }
 
 .App-logo {
-  height: 40vmin;
-  pointer-events: none;
+    height: 40vmin;
+    pointer-events: none;
 }
 
 @media (prefers-reduced-motion: no-preference) {
-  .App-logo {
-    animation: App-logo-spin infinite 20s linear;
-  }
+    .App-logo {
+        animation: App-logo-spin infinite 20s linear;
+    }
 }
 
 .App-header {
-  background-color: #282c34;
-  min-height: 100vh;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  font-size: calc(10px + 2vmin);
-  color: white;
+    background-color: #282c34;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    font-size: calc(10px + 2vmin);
+    color: white;
 }
 
 .App-link {
-  color: #61dafb;
+    color: #61dafb;
 }
 
 @keyframes App-logo-spin {
-  from {
-    transform: rotate(0deg);
-  }
-  to {
-    transform: rotate(360deg);
-  }
+    from {
+        transform: rotate(0deg);
+    }
+    to {
+        transform: rotate(360deg);
+    }
+}
+
+.enabledButton {
+    width: 352px;
+    height: 48px;
+    background-color: #3d91ff;
+    border-radius: 8px;
+    border-width: 0;
+}
+
+.disabledButton {
+    width: 352px;
+    height: 48px;
+    background-color: grey;
+    border-radius: 8px;
+    border-width: 0;
+}
+
+.fixedHeader {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    background-color: white;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    z-index: 1000;
+}
+
+.fixedHeader h1 {
+    font-size: 18px;
+    font-weight: bold;
+}
+
+.infoBlock {
+    width: 352px;
+    display: flex;
+    flex-direction: column;
+    background-color: white;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    margin-bottom: 5px;
+}
+
+.infoBlock h2 {
+    font-size: 18px;
+    font-weight: bold;
+    align-self: start;
+    padding-left: 20px;
 }
