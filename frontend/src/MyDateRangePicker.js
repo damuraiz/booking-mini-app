@@ -67,7 +67,7 @@ function MyDateRangePicker() {
             const startDate = format(range[0].startDate, 'yyyy-MM-dd');
             const endDate = format(range[0].endDate, 'yyyy-MM-dd');
 
-            axios.get(`http://backbooking-mini-app-backendend/average-nightly-rate?start_date=${startDate}&end_date=${endDate}`)
+            axios.get(`http://booking-mini-app-backend/average-nightly-rate?start_date=${startDate}&end_date=${endDate}`)
                 .then(response => {
                     const ap = currencySymbols.formatPrice(response.data.average_price/100, response.data.currency)
                     const arp = currencySymbols.formatPrice(response.data.average_price/100*response.data.currency_rate, 'RUB')
