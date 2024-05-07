@@ -66,8 +66,9 @@ function MyDateRangePicker() {
         if (range[0].startDate && range[0].endDate && range[0].startDate < range[0].endDate) {
             const startDate = format(range[0].startDate, 'yyyy-MM-dd');
             const endDate = format(range[0].endDate, 'yyyy-MM-dd');
-
-            axios.get(`http://booking-mini-app-backend/average-nightly-rate?start_date=${startDate}&end_date=${endDate}`)
+            const apiUrl = process.env.REACT_APP_API_URL
+            console.log(process.env.REACT_APP_API_URL)
+            axios.get(`${apiUrl}/average-nightly-rate?start_date=${startDate}&end_date=${endDate}`)
                 .then(response => {
                     const ap = currencySymbols.formatPrice(response.data.average_price/100, response.data.currency)
                     const arp = currencySymbols.formatPrice(response.data.average_price/100*response.data.currency_rate, 'RUB')
@@ -111,7 +112,9 @@ function MyDateRangePicker() {
 
     useEffect(() => {
 
-            axios.get('http://booking-mini-app-backend/get-calendar')
+            const apiUrl = process.env.REACT_APP_API_URL
+            console.log(apiUrl)
+            axios.get(apiUrl+'/get-calendar')
                 .then(response => {
                     // Преобразование дат в формат, требуемый DateRangePicker
                     const formattedDates = response.data.reserved_dates.map(date => ({
