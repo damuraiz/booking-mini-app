@@ -21,27 +21,27 @@ function DetailingComponent({
             <Table>
                 <TableBody>
                     <TableRow>
-                        <TableCell sx={{ borderBottom: "none" }}>{currencySymbols.formatPrice(averagePricePerNight, currency)} &#10005; {nights} ночей</TableCell>
-                        <TableCell sx={{ borderBottom: "none" }} align="right">{currencySymbols.formatPrice(subtotal, currency)}</TableCell>
+                        <TableCell sx={{ paddingY: '2px', borderBottom: "none" }}>{currencySymbols.formatPrice(averagePricePerNight, currency)} &#10005; {nights} ночей</TableCell>
+                        <TableCell sx={{ paddingY: '2px', borderBottom: "none" }} align="right">{currencySymbols.formatPrice(subtotal, currency)}</TableCell>
                     </TableRow>
                     {discountAmount > 0 && (
                         <TableRow>
-                            <TableCell sx={{ borderBottom: "none" }}>{discountName}</TableCell>
-                            <TableCell sx={{ borderBottom: "none" }} align="right" style={{fontWeight: 'bold', color: 'green'}}>
+                            <TableCell sx={{ paddingY: '2px', borderBottom: "none" }}>{discountName}</TableCell>
+                            <TableCell sx={{ paddingY: '2px', borderBottom: "none" }} align="right" style={{fontWeight: 'bold', color: 'green'}}>
                                 -{currencySymbols.formatPrice(discountAmount, currency)}
                             </TableCell>
                         </TableRow>
                     )}
                     {cleaningFee > 0 && (
                         <TableRow>
-                            <TableCell sx={{ borderBottom: "none" }}>Плата за уборку</TableCell>
-                            <TableCell sx={{ borderBottom: "none" }} align="right">{currencySymbols.formatPrice(cleaningFee, currency)}</TableCell>
+                            <TableCell sx={{paddingY: '2px',  borderBottom: "none" }}>Плата за уборку</TableCell>
+                            <TableCell sx={{paddingY: '2px',  borderBottom: "none" }} align="right">{currencySymbols.formatPrice(cleaningFee, currency)}</TableCell>
                         </TableRow>
                     )}
                     {tax > 0 && (
                         <TableRow>
-                            <TableCell sx={{ borderBottom: "none" }}>Налог</TableCell>
-                            <TableCell sx={{ borderBottom: "none" }} align="right">{currencySymbols.formatPrice(tax, currency)}</TableCell>
+                            <TableCell sx={{paddingY: '2px',  borderBottom: "none" }}>Налог</TableCell>
+                            <TableCell sx={{paddingY: '2px',  borderBottom: "none" }} align="right">{currencySymbols.formatPrice(tax, currency)}</TableCell>
                         </TableRow>
                     )}
                     <TableRow>
@@ -49,8 +49,8 @@ function DetailingComponent({
                                    colSpan={2}/>
                     </TableRow>
                     <TableRow>
-                        <TableCell sx={{ borderBottom: "none" }}>Итого</TableCell>
-                        <TableCell sx={{ borderBottom: "none" }} align="right" style={{fontWeight: 'bold'}}>{currencySymbols.formatPrice(total, currency)}</TableCell>
+                        <TableCell sx={{paddingY: '2px',  borderBottom: "none" }} style={{fontWeight: 'bold'}}>Итого ({currency})</TableCell>
+                        <TableCell sx={{paddingY: '2px',  borderBottom: "none" }} align="right" style={{fontWeight: 'bold'}}>{currencySymbols.formatPrice(total, currency)}</TableCell>
                     </TableRow>
                 </TableBody>
             </Table>
