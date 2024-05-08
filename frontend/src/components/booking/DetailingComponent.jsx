@@ -9,7 +9,9 @@ function DetailingComponent({
                                 discountName,
                                 discountAmount,
                                 cleaningFee,
-                                tax
+                                tax,
+                                startDate,
+                                endDate
                             }) {
     const subtotal = averagePricePerNight * nights;
     const total = subtotal - discountAmount + cleaningFee + tax;

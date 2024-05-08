@@ -9,10 +9,13 @@ import DetailingComponent from "./DetailingComponent";
 import RulesComponent from "./RulesComponent";
 import PaymentOptionsComponent from "./PaymentOptionsComponent";
 
+import { useBooking } from '../BookingContext';
+
 
 function BookingComponent() {
 
     const navigate = useNavigate();
+    const { contextDates } = useBooking();
     const headerCaption = 'Подтвердите и оплатите'
 
     const paymentOptions = [

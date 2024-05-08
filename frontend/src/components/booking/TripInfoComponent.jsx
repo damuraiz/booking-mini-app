@@ -1,11 +1,52 @@
 import React from 'react';
 import QuantityPicker from "../QuantityPicker";
 import {Table, TableBody, TableCell, TableRow, Typography} from "@mui/material";
-import currencySymbols from "../../utils/CurrencySymbols";
-
+import {format} from 'date-fns';
+import {ru} from 'date-fns/locale';
+import {useBooking} from '../BookingContext';
 
 function TripInfoComponent() {
 
+    const {contextDates} = useBooking();
+
+    function capitalizeFirstLetter(string) {
+        return string.charAt(0).toUpperCase() + string.slice(1);
+    }
+
+    function shortenDayOfWeek(day) {
+        const mapping = {
+            'понедельник': 'пн',
+            'вторник': 'вт',
+            'среда': 'ср',
+            'четверг': 'чт',
+            'пятница': 'пт',
+            'суббота': 'сб',
+            'воскресенье': 'вс'
+        };
+        return mapping[day.toLowerCase()] || day;
+    }
+
+
+    function customFormatDate(date, formatStr) {
+        const formattedDate = format(date, formatStr, {locale: ru});
+        // Разбиваем строку по пробелу, изменяем каждый элемент, затем объединяем обратно
+        return formattedDate
+            .split(' ')
+            .map(part => capitalizeFirstLetter(part)) // Каждое слово с большой буквы
+            .join(' ');
+    }
+
+     const formatDate = (date) => {
+        // Форматируем дату, затем обрабатываем результат для корректных сокращений
+        const formattedDate = customFormatDate(new Date(date), "EEEE, d MMMM");
+        const parts = formattedDate.split(', ');
+
+        // Применяем специальное сокращение для дня недели
+        const dayOfWeekShort = shortenDayOfWeek(parts[0]);
+        const restOfDate = parts[1];
+
+        return `${dayOfWeekShort}, ${restOfDate}`;
+    };
 
     return (
         <div className={'infoBlock'}>
@@ -28,7 +69,9 @@ function TripInfoComponent() {
                         }}>
                             <Typography variant="subtitle1" sx={{
                                 fontSize: "0.875rem"
-                            }} align="end">22 мая - 2 июня</Typography>
+                            }} align="right">
+                                {formatDate(contextDates.startDate)} - {formatDate(contextDates.endDate)}
+                            </Typography>
                         </TableCell>
                     </TableRow>
                     <TableRow>

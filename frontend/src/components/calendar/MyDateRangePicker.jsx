@@ -5,13 +5,17 @@ import format from 'date-fns/format';
 import axios from "axios";
 import currencySymbols from "../../utils/CurrencySymbols";
 import './MyDateRangePicker.css'
-import { useNavigate } from 'react-router-dom';
+import {useNavigate} from 'react-router-dom';
 
 
 import {useCalendar} from '../../utils/CalendarContext';
-import {addDays} from "date-fns/addDays";
+
+import {useBooking} from '../BookingContext';
 
 function MyDateRangePicker() {
+
+    const {contextDates, setContextDates} = useBooking();
+
     const [dates, setDates] = useState([]);  // Объявление состояния `dates` и функции `setDates`
     const [maxStay, setMaxStay] = useState(1);
 
@@ -42,11 +46,14 @@ function MyDateRangePicker() {
     const handleSelect = (ranges) => {
         const {selection} = ranges;
         setRange([selection]);
+
+
         if (selection.startDate && selection.endDate) {
             const start = new Date(selection.startDate);
             const end = new Date(selection.endDate);
+            setContextDates({startDate:start, endDate:end})
+
             // Активируем кнопку, если выбраны обе даты
-            console.log(start, end)
             setButtonEnabled(start && end && end > start);
 
             const nights = Math.round((end - start) / (1000 * 3600 * 24)); // todo тут какой-то баг с датами, который я закрыл округлением
@@ -69,7 +76,6 @@ function MyDateRangePicker() {
             const startDate = format(range[0].startDate, 'yyyy-MM-dd');
             const endDate = format(range[0].endDate, 'yyyy-MM-dd');
             const apiUrl = process.env.REACT_APP_API_URL
-            console.log(process.env.REACT_APP_API_URL)
             axios.get(`${apiUrl}/average-nightly-rate?start_date=${startDate}&end_date=${endDate}`)
                 .then(response => {
                     const ap = currencySymbols.formatPrice(response.data.average_price / 100, response.data.currency)
@@ -115,7 +121,6 @@ function MyDateRangePicker() {
     useEffect(() => {
 
             const apiUrl = process.env.REACT_APP_API_URL
-            console.log(apiUrl)
             axios.get(apiUrl + '/get-calendar')
                 .then(response => {
                     // Преобразование дат в формат, требуемый DateRangePicker
@@ -150,8 +155,7 @@ function MyDateRangePicker() {
     const navigate = useNavigate();
 
     const calculate = () => {
-        console.log('Расчет для периода:', range[0].startDate, 'по', range[0].endDate);
-        navigate('/booking')// Здесь может быть логика для обработки выбранного периода
+        navigate('/booking')// Здесь может быть логика для обработки оплаты
     };
 
 
@@ -197,8 +201,8 @@ function MyDateRangePicker() {
             />
             <div>
                 <button onClick={calculate} disabled={!buttonEnabled}
-                        className={buttonEnabled ? 'enabledButton': 'disabledButton'}>
-                    <span style={{fontWeight:"bold", fontSize:18, color:"white"}}>Бронировать</span>
+                        className={buttonEnabled ? 'enabledButton' : 'disabledButton'}>
+                    <span style={{fontWeight: "bold", fontSize: 18, color: "white"}}>Бронировать</span>
                 </button>
             </div>
         </div>
