@@ -1,4 +1,5 @@
 import React from 'react';
+import {Typography} from '@mui/material';
 
 
 function RulesComponent() {
@@ -8,7 +9,10 @@ function RulesComponent() {
       <div className={'infoBlock'}>
 
           <h2>Правила</h2>
-          <p>Нажимая на кнопку и проводя оплату вы соглашаетесь с предложенной офертой</p>
+          <Typography variant="caption" align = "left" paddingX="20px">
+              Нажимая кнопку ниже, я принимаю условия (Правила дома установленных хозяином, Оферта аренды недвижимости)
+          </Typography>
+
       </div>
 
   );
