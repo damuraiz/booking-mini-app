@@ -55,8 +55,8 @@ class HospitableClient:
             result = [{'date': entry['date'],
                        'price': entry['price']['amount'],
                        'currency': entry['price']['currency']} for entry in data]
-            for entry in result:
-                print(entry)
+            # for entry in result:
+            #     print(entry)
             return result
         else:
             response.raise_for_status()

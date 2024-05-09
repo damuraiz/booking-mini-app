@@ -1,9 +1,12 @@
-import os, base64
+import os
+import base64
 
 from flask import Flask, jsonify, request
 from flask_cors import CORS
 from clients.hospitable import HospitableClient
 from clients.сbr import CbrClient
+from util.bookingutil import BookingUtil
+from util.dateutil import DateUtil
 from datetime import datetime, timedelta
 from dateutil.relativedelta import relativedelta
 
@@ -92,7 +95,7 @@ def get_average_nightly_rate():
         if all_prices:
             for price in all_prices:
                 print(price)
-            average_price = round(sum(all_prices) / len(all_prices) * (1 + price_increase_percentage/100), -2)
+            average_price = round(sum(all_prices) / len(all_prices) * (1 + price_increase_percentage / 100), -2)
             currency_rate = cbr.get_currency_rate(currency)
             return jsonify({"average_price": average_price, "currency": currency, 'currency_rate': currency_rate})
         else:
@@ -101,6 +104,76 @@ def get_average_nightly_rate():
 
     except ValueError:
         return jsonify({'error': 'Invalid date format. Use YYYY-MM-DD.'}), 400
+
+
+@app.route('/calculate-booking', methods=['POST'])
+def calculate_booking():
+    data = request.get_json()
+    start_date = datetime.strptime(data['start_date'], '%Y-%m-%d')
+    end_date = datetime.strptime(data['end_date'], '%Y-%m-%d')
+    num_people = data['num_people']
+
+    if not start_date or not end_date or not num_people:
+        return jsonify({'error': 'Missing start_date or end_date or num_people'}), 400
+
+    end_date_adjusted = end_date - timedelta(days=1)
+
+    try:
+        bookingUtil.check_period(start_date, end_date)
+        bookingUtil.check_max_stay(start_date, end_date)
+        bookingUtil.check_max_people(num_people)
+
+        #получаем месяцы по которым будет делать запрос
+        rangeMonths = DateUtil.generate_month_range(start_date, end_date_adjusted)
+
+        # Расчёт количества ночей
+        num_nights = (end_date - start_date).days
+        prices = []
+        for entryYear, entryMonth in rangeMonths:
+            allPrices = hospitable.get_prices_by_month(month=entryMonth, year=entryYear)
+            for price in allPrices:
+                if (start_date <= datetime.strptime(price['date'], '%Y-%m-%d') <= end_date_adjusted):
+                    prices.append(price)
+
+        for price in prices:
+            print(price)
+
+        # Тикер валюты
+        currency_ticker = prices[0]['currency']
+
+        subtotal = bookingUtil.increase_price(sum(price['price'] / 100 for price in prices))
+        print(subtotal)
+
+        base_price_per_night = subtotal / num_nights
+
+        # Применение скидки (пример использования early_bird)
+
+        discount_name, discount_amount = bookingUtil.get_discount(num_nights=num_nights, amount=subtotal)
+
+        cleaningFee = bookingUtil.get_cleaning_fee(num_nights)
+
+        # Расчет общей стоимости без скидок
+        total_price = subtotal + cleaningFee - discount_amount
+
+        payment_options = bookingUtil.get_payment_options(amount=total_price, currency=currency_ticker, start_date=start_date)
+
+        return jsonify({
+            "booking_dates": {
+                "start_date": data['start_date'],
+                "end_date": data['end_date']
+            },
+            "average_night_price": round(base_price_per_night, 2),
+            "num_nights": num_nights,
+            "subtotal": subtotal,
+            "cleaning_fee": cleaningFee,
+            "currency_ticker": currency_ticker,
+            "total_price": total_price,
+            "discount_name": discount_name,
+            "discount_amount": discount_amount,
+            "payment_options": payment_options
+        })
+    except ValueError as error:
+        return jsonify({'error': "ValueError", "message": str(error)}), 400
 
 
 encoded_hospitable_token = os.getenv('ENCODED_HOSPITABLE_TOKEN')
@@ -113,6 +186,7 @@ print(price_increase_percentage)
 
 hospitable = HospitableClient(hospitable_token, hospitable_property_id)
 cbr = CbrClient()
+bookingUtil = BookingUtil()
 
 if __name__ == '__main__':
     app.run(host='0.0.0.0', port=8080)
