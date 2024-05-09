@@ -19,10 +19,10 @@ class BookingUtil:
                           'month': {"name": "Скидка за месяц", "percentage": float(os.getenv('MONTH_DISCOUNT'))}}
         self.cleaning_fee = int(os.getenv('CLEANING_FEE'))
         self.payment_options_template = {
-            "full": {"name": "Заплатите {rub_amount} сейчас", "description": "Оплачивается в рублях по курсу ЦБ РФ"},
-            "partial": {"name": "Оплатите часть сейчас, а остаток внесите позже",
-                        "description": "{rub_first_amount} к оплате сегодня по курсу ЦБ РФ({first_amount}), \n"
-                                       "{last_amount} нужно внести до {last_amount_date} по курсу ЦБ РФ на дату оплаты"}
+            "full": {"name": "{rub_amount} сейчас", "description": "Оплачивается в рублях по курсу ЦБ РФ"},
+            "partial": {"name": "{rub_first_amount} сейчас, остаток - позже",
+                        "description": "{first_amount} к оплате сегодня по курсу ЦБ РФ, \n"
+                                       "{last_amount} нужно внести до {last_amount_date} по курсу ЦБ РФ на дату внесения"}
         }
         self.partial_percentage = float(os.getenv('PARTIAL_OPTION_PERCENTAGE'))
 
@@ -75,16 +75,15 @@ class BookingUtil:
         full_option = {
             "full": {
                 "name": self.payment_options_template['full']['name'].format(rub_amount=rub_amount_str),
-                "description:": self.payment_options_template['full']['description']
+                "description": self.payment_options_template['full']['description']
             }
         }
 
         partial_option = {
             "partial": {
-                "name": self.payment_options_template['partial']['name'],
-                "description:": self.payment_options_template['partial']['description']
-                .format(rub_first_amount=rub_first_amount_str,
-                        first_amount=first_amount_str,
+                "name": self.payment_options_template['partial']['name'].format(rub_first_amount=rub_first_amount_str),
+                "description": self.payment_options_template['partial']['description']
+                .format(first_amount=first_amount_str,
                         last_amount=last_amount_str,
                         last_amount_date=last_day_str)
             }
@@ -93,15 +92,6 @@ class BookingUtil:
         options = [full_option]
         if last_day > datetime.now():
             options.append(partial_option)
-
-        print(self.payment_options_template['full']['name'].format(rub_amount=rub_amount_str))
-        print(self.payment_options_template['full']['description'])
-        print(self.payment_options_template['partial']['name'])
-        print(self.payment_options_template['partial']['description']
-              .format(rub_first_amount=rub_first_amount_str,
-                      first_amount=first_amount_str,
-                      last_amount=last_amount_str,
-                      last_amount_date=last_day_str))
 
         return options
 

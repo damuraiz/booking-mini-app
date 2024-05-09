@@ -1,10 +1,17 @@
-import React, {useState} from 'react';
-import {Radio, RadioGroup, FormControlLabel, FormControl, FormLabel, Typography, Box} from '@mui/material';
+import React, {useEffect, useState} from 'react';
+import {Radio, RadioGroup, FormControlLabel, FormControl, Typography, Box} from '@mui/material';
 
 
 function PaymentOptionsComponent({options}) {
 
-    const [selectedValue, setSelectedValue] = useState(options[0].value);
+    const [selectedValue, setSelectedValue] = useState('');
+
+    // Установка начального значения для selectedValue при загрузке компонента
+    useEffect(() => {
+        if (options.length > 0 && options[0].full) {
+            setSelectedValue('full');
+        }
+    }, [options]);
 
     const handleChange = (event) => {
         setSelectedValue(event.target.value);
@@ -15,35 +22,47 @@ function PaymentOptionsComponent({options}) {
         <div className={'infoBlock'}>
             <h2>Варианты оплаты</h2>
             <FormControl component="fieldset">
-                {/*<FormLabel component="legend">Выберите вариант</FormLabel>*/}
                 <RadioGroup value={selectedValue} onChange={handleChange}>
-                    {options.map(option => (
-                        <FormControlLabel
-                            key={option.value}
-                            value={option.value}
-                            control={<Radio/>}
-                            label={
-                                <Box sx={{display: 'flex', flexDirection: 'column', alignItems: 'flex-start'}}>
-                                    <Typography variant="subtitle1" sx={{fontWeight: 'bold', fontSize: "0.875rem"}}>
-                                        {option.title}
-                                    </Typography>
-                                    <Typography variant="body2" sx={{fontSize: "0.875rem"}}>
-                                        {option.description}
-                                    </Typography>
-                                </Box>
-                            }
-                            labelPlacement="start" // Помещает метку перед радиокнопкой
-                            sx={{
-                                justifyContent: 'space-between', // Располагает текст и кнопку на разных концах
-                                width: '320px',
-                                '& .MuiTypography-root': {flexGrow: 1}, // Позволяет тексту занимать большую часть пространства
-                            }}
-                        />
-                    ))}
+                    {options.map((option, index) => {
+                        const optionKey = Object.keys(option)[0]; // Получаем ключ ('full' или 'partial')
+                        const optionData = option[optionKey]; // Доступ к данным
+                        console.log(optionData.description); // Добавьте это в ваш код для проверки данных
+                        return (
+                            <FormControlLabel
+                                key={index}
+                                value={optionKey}
+                                control={<Radio/>}
+                                label={
+                                    <Box sx={{display: 'flex', paddingBottom: "20px", flexDirection: 'column', alignItems: 'flex-start'}}>
+                                        <Typography variant="subtitle1" sx={{
+                                            fontWeight: 'bold',
+                                            fontSize: "0.875rem",
+                                            textAlign: 'left',
+                                            lineHeight: 1.25
+                                        }}>
+                                            {optionData.name}
+                                        </Typography>
+                                        <Typography variant="body2" sx={{
+                                            fontSize: "0.675rem",
+                                            textAlign: 'left',
+                                            lineHeight: 1.15
+                                        }}>
+                                            {optionData.description}
+                                        </Typography>
+                                    </Box>
+                                }
+                                labelPlacement="start"
+                                sx={{
+                                    justifyContent: 'space-between',
+                                    width: '330px',
+                                    '& .MuiTypography-root': {flexGrow: 1}
+                                }}
+                            />
+                        );
+                    })}
                 </RadioGroup>
             </FormControl>
         </div>
-
     );
 }
 
