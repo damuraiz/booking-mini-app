@@ -25,15 +25,14 @@ function PaymentOptionsComponent({options}) {
                 <RadioGroup value={selectedValue} onChange={handleChange}>
                     {options.map((option, index) => {
                         const optionKey = Object.keys(option)[0]; // Получаем ключ ('full' или 'partial')
-                        const optionData = option[optionKey]; // Доступ к данным
-                        console.log(optionData.description); // Добавьте это в ваш код для проверки данных
+                        const optionData = option[optionKey];
                         return (
                             <FormControlLabel
                                 key={index}
                                 value={optionKey}
                                 control={<Radio/>}
                                 label={
-                                    <Box sx={{display: 'flex', paddingBottom: "20px", flexDirection: 'column', alignItems: 'flex-start'}}>
+                                    <Box sx={{display: 'flex', paddingBottom: "15px", flexDirection: 'column', alignItems: 'flex-start'}}>
                                         <Typography variant="subtitle1" sx={{
                                             fontWeight: 'bold',
                                             fontSize: "0.875rem",
