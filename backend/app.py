@@ -10,7 +10,10 @@ from util.dateutil import DateUtil
 from datetime import datetime, timedelta
 from dateutil.relativedelta import relativedelta
 
+from telegram import Bot, LabeledPrice
+
 app = Flask(__name__)
+
 CORS(app)
 
 
@@ -47,6 +50,30 @@ def get_calendar():
 
     calendar["reserved_dates"] = booked_dates
     return jsonify(calendar)
+
+@app.route('/api/request_invoice', methods=['POST'])
+def create_invoice():
+    print(request.json)
+    print("Вызвали метод")
+    data = request.json
+    chat_id = data['chat_id']
+    # # Подготовка данных для инвойса
+    title = "Оплата продукта"
+    description = "Описание продукта"
+    payload = "Unique-Payload"
+    currency = "RUB"
+    prices = [LabeledPrice("Тестовый продукт", 10000)]  # 100.00 RUB
+
+    bot.send_invoice(
+        chat_id,
+        title,
+        description,
+        payload,
+        payment_provider,
+        currency,
+        prices
+    )
+    return jsonify({'message': 'Invoice sent'})
 
 
 @app.route('/average-nightly-rate', methods=['GET'])
@@ -182,8 +209,10 @@ hospitable_token = base64.b64decode(encoded_hospitable_token).decode()
 hospitable_property_id = os.getenv('HOSPITABLE_PROPERTY_ID')
 max_stay = os.getenv('MAX_STAY')
 price_increase_percentage = float(os.getenv('PRICE_INCREASE_PERCENTAGE'))
-print(price_increase_percentage)
+payment_provider = os.getenv('PAYMENT_PROVIDER')
+telegram_token = os.getenv('TELEGRAM_TOKEN')
 
+bot = Bot(token=telegram_token)
 hospitable = HospitableClient(hospitable_token, hospitable_property_id)
 cbr = CbrClient()
 bookingUtil = BookingUtil()
