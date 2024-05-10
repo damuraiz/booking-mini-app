@@ -1,4 +1,4 @@
-import os, base64
+import os
 
 from telegram import Update, InlineKeyboardMarkup, InlineKeyboardButton
 from telegram.ext import Application, CommandHandler, CallbackQueryHandler, ContextTypes
@@ -20,8 +20,7 @@ def main():
 
 
 # получаем токен бота
-encoded_telegram_token = os.getenv('ENCODED_TELEGRAM_TOKEN')
-telegram_token = base64.b64decode(encoded_telegram_token).decode()
+telegram_token = os.getenv('TELEGRAM_TOKEN')
 
 web_app_url = os.getenv('WEB_APP_URL')
 
