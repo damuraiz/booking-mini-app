@@ -4,7 +4,7 @@ from telegram import Update, InlineKeyboardMarkup, InlineKeyboardButton
 from telegram.ext import Application, CommandHandler, CallbackQueryHandler, ContextTypes
 
 async def start(update: Update, context: ContextTypes.DEFAULT_TYPE):
-    keyboard = [[InlineKeyboardButton("Открыть календарь", web_app={"url": "https://booking-mini-app-e6444.ondigitalocean.app"})]]
+    keyboard = [[InlineKeyboardButton("Открыть календарь", web_app={"url": web_app_url})]]
     reply_markup = InlineKeyboardMarkup(keyboard)
     await update.message.reply_text('Выберите даты и бронируйте', reply_markup=reply_markup)
 
@@ -22,6 +22,8 @@ def main():
 # получаем токен бота
 encoded_telegram_token = os.getenv('ENCODED_TELEGRAM_TOKEN')
 telegram_token = base64.b64decode(encoded_telegram_token).decode()
+
+web_app_url = os.getenv('WEB_APP_URL')
 
 
 if __name__ == '__main__':
