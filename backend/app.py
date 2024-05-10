@@ -51,8 +51,9 @@ def get_calendar():
     calendar["reserved_dates"] = booked_dates
     return jsonify(calendar)
 
+
 @app.route('/request_invoice', methods=['POST'])
-def create_invoice():
+def request_invoice():
     print(request.json)
     print("Вызвали метод")
     data = request.json
@@ -74,6 +75,7 @@ def create_invoice():
         prices
     )
     return jsonify({'message': 'Invoice sent'})
+
 
 @app.route('/create-invoice', methods=['POST'])
 def create_invoice():
@@ -104,6 +106,7 @@ def create_invoice():
         return jsonify({'success': True, 'message': 'Invoice sent'})
     except Exception as e:
         return jsonify({'success': False, 'message': str(e)}), 400
+
 
 @app.route('/average-nightly-rate', methods=['GET'])
 def get_average_nightly_rate():
@@ -211,7 +214,8 @@ def calculate_booking():
         # Расчет общей стоимости без скидок
         total_price = subtotal + cleaningFee - discount_amount
 
-        payment_options = bookingUtil.get_payment_options(amount=total_price, currency=currency_ticker, start_date=start_date)
+        payment_options = bookingUtil.get_payment_options(amount=total_price, currency=currency_ticker,
+                                                          start_date=start_date)
 
         return jsonify({
             "booking_dates": {
