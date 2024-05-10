@@ -51,7 +51,7 @@ def get_calendar():
     calendar["reserved_dates"] = booked_dates
     return jsonify(calendar)
 
-@app.route('/api/request_invoice', methods=['POST'])
+@app.route('/request_invoice', methods=['POST'])
 def create_invoice():
     print(request.json)
     print("Вызвали метод")
