@@ -75,6 +75,35 @@ def create_invoice():
     )
     return jsonify({'message': 'Invoice sent'})
 
+@app.route('/create-invoice', methods=['POST'])
+def create_invoice():
+    try:
+        data = request.get_json()
+        print(data)
+        chat_id = data['chat_id']  # ID чата пользователя в Telegram
+        booking_id = data['booking_id']
+        amount = data['amount']  # Сумма в копейках (например, 10000 для 100.00 RUB)
+
+        # Формирование инвойса
+        title = "Оплата бронирования"
+        description = f"Оплата за бронирование номера {booking_id}"
+        payload = f"Payload-{booking_id}"
+        currency = "RUB"
+        prices = [LabeledPrice("Итоговая стоимость", int(amount))]
+
+        # Отправка инвойса пользователю
+        bot.send_invoice(
+            chat_id,
+            title,
+            description,
+            payload,
+            payment_provider,
+            currency,
+            prices
+        )
+        return jsonify({'success': True, 'message': 'Invoice sent'})
+    except Exception as e:
+        return jsonify({'success': False, 'message': str(e)}), 400
 
 @app.route('/average-nightly-rate', methods=['GET'])
 def get_average_nightly_rate():
